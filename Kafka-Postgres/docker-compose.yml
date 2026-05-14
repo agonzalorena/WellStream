@@ -1,0 +1,98 @@
+services:
+  # ==========================================
+  # BROKER DE KAFKA
+  # ==========================================
+  broker:
+    image: apache/kafka:3.8.0
+    container_name: wellstream-broker
+    ports:
+      - "9092:9092"
+    deploy:
+      resources:
+        limits: 
+          memory: 1G # Límite máximo duro de RAM que Docker le da al contenedor
+        reservations:
+          memory: 512M # Memoria garantizada al arrancar
+    environment:
+      # Define cuánta memoria RAM puede usar la JVM (Java) internamente.
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+      
+      # Identificador único de este nodo en el clúster.
+      KAFKA_NODE_ID: 1
+      
+      # Ahora los nodos pueden ser 'broker' (guardan datos) 
+      # y/o 'controller' (manejan el consenso y metadatos del clúster). Acá hace ambas.
+      KAFKA_PROCESS_ROLES: broker,controller
+      
+      # KRAFT: Define quiénes forman el quórum (los que votan decisiones del clúster). 
+      # Como es un solo nodo local, es él mismo votándose a sí mismo.
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
+
+      # --- CONFIGURACIÓN DE RED (LISTENERS) ---
+      # LISTENERS: Los puertos físicos donde Kafka "escucha" dentro del contenedor.
+      # Escucha en el 9092 para afuera, 9094 para adentro de Docker, y 9093 para el controlador.
+      KAFKA_LISTENERS: EXTERNAL://0.0.0.0:9092,INTERNAL://0.0.0.0:9094,CONTROLLER://0.0.0.0:9093
+      
+      # ADVERTISED_LISTENERS: La "tarjeta de presentación" de Kafka. 
+      # Le dice a tu app Java: "Conectate por localhost:9092".
+      # Le dice a Kafka-UI: "Conectate por broker:9094".
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:9092,INTERNAL://broker:9094
+
+      # Mapea los nombres lógicos (EXTERNAL/INTERNAL) al protocolo de seguridad (texto plano, sin SSL).
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+
+      # --- CONFIGURACIÓN DE CLÚSTER LOCAL ---
+      # Como tenés un solo nodo (broker), si Kafka intenta replicar datos a 3 nodos, va a fallar.
+      # Estas líneas le dicen: "No repliques, guardá 1 sola copia porque estás solo".
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      
+      # Evita que Kafka espere a que se conecten otros nodos antes de rebalancear el clúster al arrancar.
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      # Cantidad de particiones por defecto al crear un tópico nuevo.
+      KAFKA_NUM_PARTITIONS: 3
+
+  # ==========================================
+  # KAFKA UI (Interfaz Gráfica)
+  # ==========================================
+  kafka-ui:
+    image: provectuslabs/kafka-ui:v0.7.2
+    container_name: wellstream-kafka-ui
+    ports:
+      - "3010:8080"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local-cluster
+      # Se conecta usando la red interna de Docker, llamando al contenedor "broker" en el puerto 9094.
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: broker:9094
+    depends_on:
+      - broker # Espera a que el broker levante antes de iniciar la UI.
+
+  # ==========================================
+  # BASE DE DATOS POSTGRESQL 
+  # ==========================================
+  postgres-db:
+    image: postgres:17
+    container_name: postgres-db
+    ports:
+      - "5432:5432"
+    environment:
+      # Credenciales
+      POSTGRES_USER: user_admin
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: upstream_db
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      
+volumes:
+  pgdata:
