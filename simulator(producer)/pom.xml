@@ -38,6 +38,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-kafka</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<!--Corregir error dependencia entre versiones de spring-boot-starter-web y spring-boot-starter-kafka-->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

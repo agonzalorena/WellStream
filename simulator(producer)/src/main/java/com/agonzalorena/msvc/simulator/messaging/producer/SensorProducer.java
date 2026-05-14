@@ -21,6 +21,5 @@ public class SensorProducer {
                              System.out.println("Message sent to partition: " + result.getRecordMetadata().partition() + " with offset: " + result.getRecordMetadata().offset());
                          }
                      });
-        System.out.println("Data sent for well " + wellId + ": " + sensorData);
     }
 }
