@@ -15,6 +15,11 @@ public class SensorService {
     private double currentPressure = 3450.0;
     private double currentTemp = 60.0;
 
+    // Multiplicadores para simular anomalías
+    private double pressureMultiplier = 1.0;
+    private double temperatureMultiplier = 1.0;
+    private double flowMultiplier = 1.0;
+
     public SensorService(SensorProducer sensorProducer) {
         this.sensorProducer = sensorProducer;
     }
@@ -27,22 +32,60 @@ public class SensorService {
     }
 
     private SensorDTO generateRandomSensorData() {
+        // 0.32 * 20 = 6.4 - 10 = -3.6 ---- 0.72 * 20 = 14.4 - 10 = 4.4
         this.currentFlow += (Math.random() * 20 - 10);
         this.currentPressure += (Math.random() * 10 - 5);
         this.currentTemp += (Math.random() * 2 - 1);
 
-
        return new SensorDTO(
                 "Cerro-Dragon-1",
                 Instant.now(),
-                round(this.currentPressure),
-                round(this.currentTemp),
-                round(this.currentFlow)
+                round(this.currentPressure * pressureMultiplier),
+                round(this.currentTemp * temperatureMultiplier),
+                round(this.currentFlow * flowMultiplier)
         );
     }
 
     // Metodo auxiliar para redondear a 2 decimales
     private double round(double value) {
         return Math.round(value * 100.0) / 100.0;
+    }
+
+    // Métodos para modificar los multiplicadores (simular anomalías)
+    public void setPressureMultiplier(double multiplier) {
+        checkPositive(multiplier);
+        this.pressureMultiplier = multiplier;
+        System.out.println("Presión multiplicador establecido a: " + multiplier);
+    }
+
+    public void setTemperatureMultiplier(double multiplier) {
+        checkPositive(multiplier);
+        this.temperatureMultiplier = multiplier;
+        System.out.println("Temperatura multiplicador establecido a: " + multiplier);
+    }
+
+    public void setFlowMultiplier(double multiplier) {
+        checkPositive(multiplier);
+        this.flowMultiplier = multiplier;
+        System.out.println("Caudal multiplicador establecido a: " + multiplier);
+    }
+
+    public void resetMultipliers() {
+        this.pressureMultiplier = 1.0;
+        this.temperatureMultiplier = 1.0;
+        this.flowMultiplier = 1.0;
+        System.out.println("Multiplicadores reiniciados a valores normales");
+    }
+
+    public SensorMultipliers getMultipliers() {
+        return new SensorMultipliers(pressureMultiplier, temperatureMultiplier, flowMultiplier);
+    }
+
+    public record SensorMultipliers(double pressure, double temperature, double flow) {
+    }
+    private void checkPositive(double value){
+        if(value <= 0){
+            throw new IllegalArgumentException("El multiplicador debe ser un valor mayor a 0");
+        }
     }
 }
