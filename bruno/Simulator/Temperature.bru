@@ -1,0 +1,20 @@
+meta {
+  name: Temperature
+  type: http
+  seq: 3
+}
+
+put {
+  url: http://localhost:8081/api/sensors/multipliers/temperature?multiplier=0.4
+  body: none
+  auth: inherit
+}
+
+params:query {
+  multiplier: 0.4
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

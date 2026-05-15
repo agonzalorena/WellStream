@@ -1,0 +1,20 @@
+meta {
+  name: Pressure
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8081/api/sensors/multipliers/pressure?multiplier=2
+  body: none
+  auth: inherit
+}
+
+params:query {
+  multiplier: 2
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
