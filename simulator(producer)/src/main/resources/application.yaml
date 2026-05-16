@@ -12,6 +12,10 @@ spring:
        add-mappings: false # Desactiva el manejo automatico de recursos estaticos
   kafka:
     bootstrap-servers: localhost:9092
+    topics:
+      telemetry: topic-telemetry
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.type.mapping: "sensor-dto:com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO"
