@@ -1,0 +1,18 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: analyzer
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: telemetry-analyzer-group
+      #Empieza a leer desde el último mensaje disponible en el topic
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # Deserializador para convertir el JSON recibido en objetos Java
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.type.mapping: "sensor-dto:com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO"
+        spring.json.trusted.packages: "*"
