@@ -11,8 +11,8 @@ import java.time.Instant;
 public class SensorService {
     final private SensorProducer sensorProducer;
 
-    private double currentFlow = 1013.2;
-    private double currentPressure = 3450.0;
+    private double currentFlow = 1213.2;
+    private double currentPressure = 3250.0;
     private double currentTemp = 60.0;
 
     // Multiplicadores para simular anomalías
@@ -32,10 +32,9 @@ public class SensorService {
     }
 
     private SensorDTO generateRandomSensorData() {
-        // 0.32 * 20 = 6.4 - 10 = -3.6 ---- 0.72 * 20 = 14.4 - 10 = 4.4
-        this.currentFlow += (Math.random() * 20 - 10);
+        this.currentFlow += (Math.random() * 10 - 5); // +-5
         this.currentPressure += (Math.random() * 10 - 5);
-        this.currentTemp += (Math.random() * 2 - 1);
+        this.currentTemp += (Math.random() * 10 - 5);
 
        return new SensorDTO(
                 "Cerro-Dragon-1",
