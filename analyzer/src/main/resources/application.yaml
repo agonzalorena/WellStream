@@ -16,6 +16,11 @@ spring:
       properties:
         spring.json.type.mapping: "sensor-dto:com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO"
         spring.json.trusted.packages: "*"
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+            spring.json.type.mapping: "alert-dto:com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO"
 
   datasource:
     url: jdbc:postgresql://localhost:5432/upstream_db
@@ -35,3 +40,17 @@ spring:
   output:
     ansi:
         enabled: always #Logs de hibernate con colores
+
+# App Configuration
+app:
+  limits:
+    pressure:
+      max: 4000.0
+      min: 250.0
+    temperature:
+      max: 85.0
+      min: 25.0
+    flow-rate:
+      max: 3500.0
+      min: 600.0
+    hysteresis-margin: 6.0
