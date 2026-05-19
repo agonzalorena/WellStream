@@ -73,6 +73,9 @@ public class SensorService {
         this.pressureMultiplier = 1.0;
         this.temperatureMultiplier = 1.0;
         this.flowMultiplier = 1.0;
+        this.currentFlow = 1213.2;
+        this.currentPressure = 3250.0;
+        this.currentTemp = 60.0;
         System.out.println("Multiplicadores reiniciados a valores normales");
     }
 
