@@ -1,82 +1,78 @@
 package com.agonzalorena.msvc.analyzer.service;
 
+import com.agonzalorena.msvc.analyzer.cache.ActiveAlertCacheManager;
+import com.agonzalorena.msvc.analyzer.config.AlertLimitsConfig;
+import com.agonzalorena.msvc.analyzer.messaging.producer.AlertProducer;
 import com.agonzalorena.msvc.analyzer.persistence.LimitType;
 import com.agonzalorena.msvc.analyzer.persistence.MetricType;
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import com.agonzalorena.msvc.analyzer.persistence.repository.WellAlertRepository;
+import com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO;
+import com.agonzalorena.msvc.analyzer.presentation.dto.AlertStatus;
 import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.time.Instant;
 
 @Service
 public class AlertAnalyzerService {
-    private static final double MAX_PRESSURE_PSI = 4000.0;
-    private static final double MIN_PRESSURE_PSI = 250.0;
-    private static final double MAX_TEMPERATURE_C = 85.0;
-    private static final double MIN_TEMPERATURE_C = 25.0;
-    private static final double MIN_FLOW_RATE_BPD = 600.0;
-    private static final double MAX_FLOW_RATE_BPD = 3500.0;
-    // Zona muerta para evitar alertas si los valores oscilan cerca del límite
-    private static final double HYSTERESIS_MAGIN = 6.0;
-    private int testCounter = 0;
+    private final AlertLimitsConfig limits;
     private final WellAlertRepository wellAlertRepository;
+    private final ActiveAlertCacheManager cacheManager;
+    private final AlertNotificationService alertNotificationService;
 
-    //wellId-metric("pozo1-Temperature) --> LimitType(MAX o MIN)
-    private final Map<String, LimitType> activeAlertsCache = new ConcurrentHashMap<>();
 
-    public AlertAnalyzerService(WellAlertRepository wellAlertRepository) {
+    public AlertAnalyzerService(WellAlertRepository wellAlertRepository,
+                                ActiveAlertCacheManager cacheManager,
+                                AlertNotificationService alertNotificationService,
+                                AlertLimitsConfig limits) {
         this.wellAlertRepository = wellAlertRepository;
-        loadUnresolvedAlerts();
+        this.cacheManager = cacheManager;
+        this.alertNotificationService = alertNotificationService;
+        this.limits = limits;
     }
 
-    private void loadUnresolvedAlerts() {
-        wellAlertRepository.findByResolvedFalse().forEach(alert ->
-                activeAlertsCache.put(alert.getWellId() + "-" + alert.getMetricType().name(), alert.getLimitType()));
-        System.out.println("Loaded unresolved alerts into cache: " + activeAlertsCache);
-    }
 
+    @Async
     public void checkCriticalValues(SensorDTO dto) {
-        LocalDateTime timestamp = LocalDateTime.ofInstant(dto.timestamp(), java.time.ZoneId.systemDefault());
-        evaluateMetric(dto.wellId(), MetricType.PRESSURE, dto.pressurePsi(), MAX_PRESSURE_PSI, MIN_PRESSURE_PSI, timestamp);
-        evaluateMetric(dto.wellId(), MetricType.TEMPERATURE, dto.temperatureC(), MAX_TEMPERATURE_C, MIN_TEMPERATURE_C, timestamp);
-        evaluateMetric(dto.wellId(), MetricType.FLOW_RATE, dto.flowRateBpd(), MAX_FLOW_RATE_BPD, MIN_FLOW_RATE_BPD, timestamp);
+        evaluateMetric(dto.wellId(), MetricType.PRESSURE, dto.pressurePsi(), limits.pressure().max(), limits.pressure().min(), dto.timestamp());
+        evaluateMetric(dto.wellId(), MetricType.TEMPERATURE, dto.temperatureC(), limits.temperature().max(), limits.temperature().min(), dto.timestamp());
+        evaluateMetric(dto.wellId(), MetricType.FLOW_RATE, dto.flowRateBpd(), limits.flowRate().max(), limits.flowRate().min(), dto.timestamp());
     }
 
-    private void evaluateMetric(String wellId, MetricType metricType, double currentValue, double maxLimit, double minLimit, LocalDateTime timestamp) {
-        String cacheKey = wellId + "-" + metricType.name();
+    private void evaluateMetric(String wellId, MetricType metricType, double currentValue, double maxLimit, double minLimit, Instant timestamp) {
 
         // Obtenemos qué tipo de alerta está activa (si es null, no hay alerta)
-        LimitType activeLimitType = activeAlertsCache.get(cacheKey);
+        WellAlert cachedAlert = cacheManager.get(wellId, metricType.name());
+        LimitType activeLimitType = (cachedAlert != null) ? cachedAlert.getLimitType() : null;
 
         if (activeLimitType == null) {
             // 1. NO HAY ALERTA: Evaluamos si hay que abrir una nueva
             if (currentValue > maxLimit) {
-                createAlert(currentValue, maxLimit, minLimit, LimitType.MAX, metricType, wellId, timestamp, cacheKey);
+                createAlert(currentValue, maxLimit, minLimit, LimitType.MAX, metricType, wellId, timestamp);
             } else if (currentValue < minLimit) {
-                createAlert(currentValue, maxLimit, minLimit, LimitType.MIN, metricType, wellId, timestamp, cacheKey);
+                createAlert(currentValue, maxLimit, minLimit, LimitType.MIN, metricType, wellId, timestamp);
             }
         } else {
             // 2. HAY UNA ALERTA ACTIVA: Evaluamos si ya se resolvió (CON histéresis)
             if (activeLimitType == LimitType.MAX) {
                 // Se activó por alta. Se resuelve si baja del límite máximo menos el margen.
-                if (currentValue < (maxLimit - HYSTERESIS_MAGIN)) {
-                    resolveAlert(wellId, metricType, timestamp, cacheKey);
+                if (currentValue < (maxLimit - limits.hysteresisMargin())) {
+                    resolveAlert(wellId, metricType, timestamp);
                 }
             } else if (activeLimitType == LimitType.MIN) {
                 // Se activó por baja. Se resuelve si sube del límite mínimo más el margen.
-                if (currentValue > (minLimit + HYSTERESIS_MAGIN)) {
-                    resolveAlert(wellId, metricType, timestamp, cacheKey);
+                if (currentValue > (minLimit + limits.hysteresisMargin())) {
+                    resolveAlert(wellId, metricType, timestamp);
                 }
             }
         }
     }
 
     private void createAlert(double criticalValue, double maxLimit, double minLimit, LimitType limitType,
-                             MetricType metricType, String wellId, LocalDateTime startTime, String cacheKey) {
+                             MetricType metricType, String wellId, Instant startTime) {
         WellAlert alert = new WellAlert();
         alert.setCriticalValue(criticalValue);
         alert.setMetricType(metricType);
@@ -85,22 +81,22 @@ public class AlertAnalyzerService {
         alert.setLimitType(limitType);
         alert.setMaxLimit(maxLimit);
         alert.setMinLimit(minLimit);
+
+        cacheManager.save(alert);
         wellAlertRepository.save(alert);
-        activeAlertsCache.put(cacheKey, limitType);
-        //enviar notificacion AlertProducer.sendAlertMessage(alertDTO);
+        alertNotificationService.notifyActiveAlert(alert);
     }
 
-    private void resolveAlert(String wellId, MetricType metricType, LocalDateTime resolvedTime, String cacheKey) {
-        WellAlert alert = wellAlertRepository.findByWellIdAndMetricTypeAndResolvedFalse(wellId, metricType)
-                .orElseThrow(() -> new RuntimeException("No active alert found for well: " + wellId + " and metric: " + metricType));
+    private void resolveAlert(String wellId, MetricType metricType, Instant resolvedTime) {
+        int rowsUpdate = wellAlertRepository.resolveAlert(wellId, metricType, resolvedTime);
+        if (rowsUpdate == 0) {
+            throw new RuntimeException("Failed to resolve alert for well: " + wellId + " and metric: " + metricType);
+        }
 
+        WellAlert alert = cacheManager.get(wellId, metricType.name());
         alert.setResolved(true);
         alert.setResolvedTime(resolvedTime);
-
-        wellAlertRepository.save(alert);
-        //enviar notificacion AlertProducer.sendAlertResolvedMessage(alertDTO);
-        activeAlertsCache.remove(cacheKey);
-
+        alertNotificationService.notifyResolvedAlert(alert);
+        cacheManager.remove(wellId, metricType.name());
     }
-
 }

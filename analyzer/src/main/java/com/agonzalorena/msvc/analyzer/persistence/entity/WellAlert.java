@@ -5,6 +5,7 @@ import com.agonzalorena.msvc.analyzer.persistence.MetricType;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,8 +27,8 @@ public class WellAlert {
     @Column(nullable = false)
     private LimitType limitType;
     @Column(nullable = false)
-    private LocalDateTime startTime;
+    private Instant startTime;
     @Column(nullable = false)
     private boolean resolved = false;
-    private LocalDateTime resolvedTime;
+    private Instant resolvedTime;
 }
