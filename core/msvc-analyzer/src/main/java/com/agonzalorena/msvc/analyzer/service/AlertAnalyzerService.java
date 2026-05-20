@@ -2,15 +2,11 @@ package com.agonzalorena.msvc.analyzer.service;
 
 import com.agonzalorena.msvc.analyzer.cache.ActiveAlertCacheManager;
 import com.agonzalorena.msvc.analyzer.config.AlertLimitsConfig;
-import com.agonzalorena.msvc.analyzer.messaging.producer.AlertProducer;
-import com.agonzalorena.msvc.analyzer.persistence.LimitType;
-import com.agonzalorena.msvc.analyzer.persistence.MetricType;
+import com.agonzalorena.msvc.analyzer.common.enums.LimitType;
+import com.agonzalorena.msvc.analyzer.common.enums.MetricType;
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import com.agonzalorena.msvc.analyzer.persistence.repository.WellAlertRepository;
-import com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO;
-import com.agonzalorena.msvc.analyzer.presentation.dto.AlertStatus;
 import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -82,8 +78,8 @@ public class AlertAnalyzerService {
         alert.setMaxLimit(maxLimit);
         alert.setMinLimit(minLimit);
 
-        cacheManager.save(alert);
         wellAlertRepository.save(alert);
+        cacheManager.save(alert);
         alertNotificationService.notifyActiveAlert(alert);
     }
 
@@ -96,7 +92,7 @@ public class AlertAnalyzerService {
         WellAlert alert = cacheManager.get(wellId, metricType.name());
         alert.setResolved(true);
         alert.setResolvedTime(resolvedTime);
-        alertNotificationService.notifyResolvedAlert(alert);
         cacheManager.remove(wellId, metricType.name());
+        alertNotificationService.notifyResolvedAlert(alert);
     }
 }

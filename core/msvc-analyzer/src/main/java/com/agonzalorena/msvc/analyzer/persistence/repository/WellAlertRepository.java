@@ -1,6 +1,6 @@
 package com.agonzalorena.msvc.analyzer.persistence.repository;
 
-import com.agonzalorena.msvc.analyzer.persistence.MetricType;
+import com.agonzalorena.msvc.analyzer.common.enums.MetricType;
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

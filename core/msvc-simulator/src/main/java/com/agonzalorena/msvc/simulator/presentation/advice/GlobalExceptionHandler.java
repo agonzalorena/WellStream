@@ -1,4 +1,4 @@
-package com.agonzalorena.msvc.simulator.exception;
+package com.agonzalorena.msvc.simulator.presentation.advice;
 
 import com.agonzalorena.msvc.simulator.presentation.dto.response.ErrorResponse;
 import org.springframework.http.ResponseEntity;

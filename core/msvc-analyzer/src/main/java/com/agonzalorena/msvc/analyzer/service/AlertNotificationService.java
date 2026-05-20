@@ -1,10 +1,10 @@
 package com.agonzalorena.msvc.analyzer.service;
 
 import com.agonzalorena.msvc.analyzer.messaging.producer.AlertProducer;
-import com.agonzalorena.msvc.analyzer.persistence.LimitType;
+import com.agonzalorena.msvc.analyzer.common.enums.LimitType;
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO;
-import com.agonzalorena.msvc.analyzer.presentation.dto.AlertStatus;
+import com.agonzalorena.msvc.analyzer.common.enums.AlertStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;

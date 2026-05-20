@@ -1,4 +1,4 @@
-package com.agonzalorena.msvc.analyzer.persistence;
+package com.agonzalorena.msvc.analyzer.common.enums;
 
 public enum MetricType {
     TEMPERATURE,

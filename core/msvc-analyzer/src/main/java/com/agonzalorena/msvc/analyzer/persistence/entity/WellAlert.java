@@ -1,7 +1,7 @@
 package com.agonzalorena.msvc.analyzer.persistence.entity;
 
-import com.agonzalorena.msvc.analyzer.persistence.LimitType;
-import com.agonzalorena.msvc.analyzer.persistence.MetricType;
+import com.agonzalorena.msvc.analyzer.common.enums.LimitType;
+import com.agonzalorena.msvc.analyzer.common.enums.MetricType;
 import jakarta.persistence.*;
 import lombok.Data;
 
