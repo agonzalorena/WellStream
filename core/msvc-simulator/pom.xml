@@ -9,7 +9,7 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>msvc-simulator</artifactId>
-	<name>simulator</name>
+	<name>msvc-simulator</name>
 	<description/>
 	<url/>
 	<licenses>

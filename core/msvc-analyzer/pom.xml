@@ -9,7 +9,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>msvc-analyzer</artifactId>
-    <name>analyzer</name>
+    <name>msvc-analyzer</name>
     <description/>
     <url/>
     <licenses>
