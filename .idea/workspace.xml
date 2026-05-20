@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="96d34767-7f31-406b-88d5-3452e557bfd4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/analyzer/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/AnalyzerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/cache/ActiveAlertCacheManager.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/config/AlertLimitsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/messaging/consumer/TelemetryConsumer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/messaging/producer/AlertProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/persistence/LimitType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/persistence/MetricType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/persistence/entity/WellAlert.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/persistence/repository/WellAlertRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/presentation/dto/AlertNotificationDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/presentation/dto/AlertStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/presentation/dto/SensorDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/service/AlertAnalyzerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/service/AlertNotificationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/java/com/agonzalorena/msvc/analyzer/service/TrendAnalyzerService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/analyzer/src/test/java/com/agonzalorena/msvc/analyzer/AnalyzerApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/SimulatorApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/exception/GlobalExceptionHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/messaging/producer/SensorProducer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/presentation/controller/SensorController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/presentation/dto/SensorDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/presentation/dto/response/ErrorResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/presentation/dto/response/SuccessResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/java/com/agonzalorena/msvc/simulator/service/SensorService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/main/resources/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/test/java/com/agonzalorena/msvc/simulator/SimulatorApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/test/java/com/agonzalorena/msvc/simulator/messaging/producer/SensorProducerTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulator(producer)/src/test/java/com/agonzalorena/msvc/simulator/service/SensorServiceTest.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotChats">
+    <option name="panelChat">
+      <chat>
+        <option name="activeSessionId" value="6d61def8-ec31-43cd-a78a-0b90742ae651" />
+        <option name="sessions">
+          <session>
+            <option name="chatType" value="PANEL" />
+            <option name="id" value="6d61def8-ec31-43cd-a78a-0b90742ae651" />
+            <option name="modeId" value="Ask" />
+            <option name="modelType" value="builtin_family" />
+            <option name="modelValue" value="auto" />
+            <option name="targetType" value="LOCAL" />
+          </session>
+        </option>
+        <option name="type" value="PANEL" />
+      </chat>
+    </option>
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/agustin/Documents/Projects/WellStream" value="3DzfH4c0exINp54qojjlB0YD8gt" />
+    </persistenceIdMap>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "agonzalorena"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/agonzalorena/WellStream.git",
+    "accountId": "976fc5f1-6d3e-43f3-9e98-561304b4cc2f"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1,
+  "fromUser": false
+}]]></component>
+  <component name="ProjectId" id="3DzfH4c0exINp54qojjlB0YD8gt" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="96d34767-7f31-406b-88d5-3452e557bfd4" name="Changes" comment="" />
+      <created>1779289729285</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1779289729285</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
+  </component>
+</project>
