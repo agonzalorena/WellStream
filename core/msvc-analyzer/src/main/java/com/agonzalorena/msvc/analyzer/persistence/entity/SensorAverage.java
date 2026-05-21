@@ -15,7 +15,8 @@ public class SensorAverage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String wellId;
-    private Instant timestamp;
+    private Instant startWindowTime;
+    private Instant endWindowTime;
     private Double avgPressurePsi;
     private Double avgTemperatureC;
     private Double avgFlowRateBpd;

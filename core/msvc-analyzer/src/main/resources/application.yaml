@@ -18,9 +18,7 @@ spring:
       #  spring.json.trusted.packages: "*"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-            spring.json.type.mapping: "alert-dto:com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO"
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
 
   datasource:
     url: jdbc:postgresql://localhost:5432/upstream_db

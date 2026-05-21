@@ -1,42 +1,29 @@
 package com.agonzalorena.msvc.analyzer.messaging.consumer;
 
-import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
-import com.agonzalorena.msvc.analyzer.service.AlertAnalyzerService;
 import com.agonzalorena.msvc.analyzer.messaging.buffer.TelemetryBufferManager;
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.agonzalorena.msvc.analyzer.messaging.consumer.parser.SensorEventParser;
+import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import com.agonzalorena.msvc.protobuf.SensorProto;
+
 
 @Component
 public class TelemetryConsumer {
     private final TelemetryBufferManager telemetryBufferManager;
-    private final AlertAnalyzerService alertAnalyzerService;
+    private final SensorEventParser sensorEventParser;
 
-    public TelemetryConsumer(TelemetryBufferManager telemetryBufferManager, AlertAnalyzerService alertAnalyzerService) {
+    public TelemetryConsumer(TelemetryBufferManager telemetryBufferManager, SensorEventParser sensorEventParser) {
         this.telemetryBufferManager = telemetryBufferManager;
-        this.alertAnalyzerService = alertAnalyzerService;
+        this.sensorEventParser = sensorEventParser;
     }
 
     @KafkaListener(topics = "topic-telemetry", groupId = "telemetry-analyzer_group")
     public void consume(byte[] payload) {
-        try{
-            SensorProto.SensorDTO sensorData = SensorProto.SensorDTO.parseFrom(payload);
-            SensorDTO dto = new SensorDTO(
-                    sensorData.getWellId(),
-                    java.time.Instant.ofEpochMilli(sensorData.getTimestamp()),
-                    sensorData.getPressurePsi(),
-                    sensorData.getTemperatureC(),
-                    sensorData.getFlowRateBpd()
-            );
-            System.out.println("Received telemetry data: " + dto);
+        SensorDTO dto = sensorEventParser.parse(payload);
+        if(dto != null) {
+            System.out.println("Received telemetry data for buffering: " + dto);
             telemetryBufferManager.addSensorData(dto);
-            alertAnalyzerService.checkCriticalValues(dto);
-        }catch (InvalidProtocolBufferException e){
-            System.err.println("Failed to parse protobuf message: " + e.getMessage());
         }
-
-
-
     }
+
 }

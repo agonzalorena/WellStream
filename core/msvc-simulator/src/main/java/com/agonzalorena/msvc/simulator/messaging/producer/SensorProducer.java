@@ -1,10 +1,11 @@
 package com.agonzalorena.msvc.simulator.messaging.producer;
 
 import com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO;
+import com.google.protobuf.Timestamp;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import com.agonzalorena.msvc.protobuf.SensorProto;
+import com.agonzalorena.msvc.protobuf.SensorProto.SensorEvent;
 
 @Component
 public class SensorProducer {
@@ -17,9 +18,15 @@ public class SensorProducer {
     }
 
     public void sendMessage(String wellId, SensorDTO sensorData){
-        SensorProto.SensorDTO protoSensor = SensorProto.SensorDTO.newBuilder()
+        // Convertimos Instant a google.protobuf.Timestamp
+        Timestamp protoTimestamp = Timestamp.newBuilder()
+                .setSeconds(sensorData.timestamp().getEpochSecond())
+                .setNanos(sensorData.timestamp().getNano())
+                .build();
+
+        SensorEvent protoSensor = SensorEvent.newBuilder()
                 .setWellId(sensorData.wellId())
-                .setTimestamp(sensorData.timestamp().toEpochMilli())
+                .setTimestamp(protoTimestamp)
                 .setPressurePsi(sensorData.pressurePsi())
                 .setTemperatureC(sensorData.temperatureC())
                 .setFlowRateBpd(sensorData.flowRateBpd())

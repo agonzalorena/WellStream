@@ -32,9 +32,12 @@ public class SensorAverageCalculatorService {
             log.info("No telemetry data to process at {}", Instant.now());
             return;
         }
-        Instant processingTime = Instant.now();
 
         dataToProcess.forEach((wellId, sensorDataList) -> {
+            if(sensorDataList.isEmpty()){
+                log.info("No telemetry data for wellId: {} at {}", wellId, Instant.now());
+                return;
+            }
             double sumTemp=0.0;
             double sumPres=0.0;
             double sumFlow=0.0;
@@ -54,13 +57,14 @@ public class SensorAverageCalculatorService {
             average.setAvgTemperatureC(round(averageTemp));
             average.setAvgPressurePsi(round(averagePres));
             average.setAvgFlowRateBpd(round(averageFlow));
-            average.setTimestamp(processingTime);
+            average.setStartWindowTime(sensorDataList.get(0).timestamp());
+            average.setEndWindowTime(sensorDataList.get(sensorDataList.size() - 1).timestamp());
             average.setReadingsCount(sensorDataList.size());
 
             try {
                 sensorAverageRepository.save(average);
                 log.info("Saved average for wellId: {}, avgTemp: {}, avgPres: {}, avgFlow: {}, count: {}",
-                        wellId, averageTemp, averagePres, averageFlow, count);
+                        wellId, round(averageTemp), round(averagePres), round(averageFlow), count);
             }catch (Exception e){
                 log.error("Error saving average for wellId: {}, error: {}. Lost data", wellId, e.getMessage());
             }

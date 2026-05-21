@@ -24,6 +24,10 @@ public class TelemetryBufferManager {
      * Al cambiar la referencia a un mapa nuevo, Kafka escribe en el nuevo y nosotros
      * procesamos el viejo de forma 100% segura.
      */
+    /*
+    * TODO poner limite al buffer para no llenar ram
+    *  Procesar datos del buffer con el scheluded
+    *  Y procesar datos cuando se llena el buffer, asi si llegan 1500 msj va procesando de a 100 */
     public synchronized Map<String, List<SensorDTO>> flush() {
         Map<String, List<SensorDTO>> dataToProcess = this.telemetryBuffer;
         this.telemetryBuffer = new ConcurrentHashMap<>();

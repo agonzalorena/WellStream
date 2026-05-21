@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+//paquete interno de protobuf
+package proto;
+
+option java_package = "com.agonzalorena.msvc.protobuf";
+option java_outer_classname = "AlertProto";
+
+import "google/protobuf/timestamp.proto";
+
+enum MetricType {
+  METRIC_TYPE_UNSPECIFIED = 0;
+  PRESSURE = 1;
+  TEMPERATURE = 2;
+  FLOW_RATE = 3;
+}
+enum LimitType {
+  LIMIT_TYPE_UNSPECIFIED = 0;
+  MAX = 1;
+  MIN = 2;
+}
+enum AlertStatus {
+  ALERT_STATUS_UNSPECIFIED = 0;
+  ACTIVE = 1;
+  RESOLVED = 2;
+}
+
+message AlertEvent {
+  string well_id = 1;
+  MetricType metric_type = 2;
+  LimitType limit_type = 3;
+  double critical_value = 4;
+  double limit_exceeded_value = 5;
+  google.protobuf.Timestamp timestamp = 6;
+  AlertStatus alert_status = 7;
+}
