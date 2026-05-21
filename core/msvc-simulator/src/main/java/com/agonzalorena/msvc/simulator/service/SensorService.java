@@ -24,7 +24,7 @@ public class SensorService {
         this.sensorProducer = sensorProducer;
     }
 
-    @Scheduled(fixedRate = 4000)
+    @Scheduled(fixedRate = 1000)
     public void sendSensorData() {
         SensorDTO sensorDto = generateRandomSensorData();
         sensorProducer.sendMessage(sensorDto.wellId(), sensorDto);

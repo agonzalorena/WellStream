@@ -22,6 +22,7 @@
     <modules>
         <module>msvc-analyzer</module>
         <module>msvc-simulator</module>
+        <module>msvc-notification</module>
     </modules>
 
     <properties>
