@@ -4,19 +4,29 @@ import com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
+import com.agonzalorena.msvc.protobuf.SensorProto;
 
 @Component
 public class SensorProducer {
     @Value("${spring.kafka.topics.telemetry}")
     private String telemetryTopic;
-    private KafkaTemplate<String, SensorDTO> kafkaTemplate;
+    private KafkaTemplate<String, byte[]> kafkaTemplate;
 
-    public SensorProducer(KafkaTemplate<String, SensorDTO> kafkaTemplate) {
+    public SensorProducer(KafkaTemplate<String, byte[]> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     public void sendMessage(String wellId, SensorDTO sensorData){
-        kafkaTemplate.send(telemetryTopic, wellId, sensorData)
+        SensorProto.SensorDTO protoSensor = SensorProto.SensorDTO.newBuilder()
+                .setWellId(sensorData.wellId())
+                .setTimestamp(sensorData.timestamp().toEpochMilli())
+                .setPressurePsi(sensorData.pressurePsi())
+                .setTemperatureC(sensorData.temperatureC())
+                .setFlowRateBpd(sensorData.flowRateBpd())
+                .build();
+
+
+        kafkaTemplate.send(telemetryTopic, wellId, protoSensor.toByteArray())
                      .whenComplete((result, exception) -> {
                          if(exception != null){
                              System.err.println("Error sending message: " + exception.getMessage());

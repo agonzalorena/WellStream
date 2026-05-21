@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+//paquete interno de protobuf
+package proto;
+
+option java_package = "com.agonzalorena.msvc.protobuf";
+option java_outer_classname = "SensorProto";
+
+message SensorDTO{
+  string well_id = 1;
+  int64 timestamp = 2;
+  double pressure_psi = 3;
+  double temperature_c = 4;
+  double flow_rate_bpd = 5;
+}

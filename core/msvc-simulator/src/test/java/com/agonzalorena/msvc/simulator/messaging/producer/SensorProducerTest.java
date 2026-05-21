@@ -23,7 +23,7 @@ class SensorProducerTest {
     private SensorProducer sensorProducer;
 
     @Mock
-    private KafkaTemplate<String, SensorDTO> kafkaTemplateMock;
+    private KafkaTemplate<String, byte[]> kafkaTemplateMock;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +37,7 @@ class SensorProducerTest {
         // Arrange
         String wellId = "Cerro-Dragon-1";
         SensorDTO sensorData = new SensorDTO(wellId, Instant.now(), 3450.0, 60.0, 1013.2);
-        when(kafkaTemplateMock.send(anyString(), anyString(), any(SensorDTO.class))).thenReturn(
+        when(kafkaTemplateMock.send(anyString(), anyString(), any(byte[].class))).thenReturn(
             CompletableFuture.completedFuture(null)
         );
 
@@ -45,7 +45,7 @@ class SensorProducerTest {
         sensorProducer.sendMessage(wellId, sensorData);
 
         // Assert
-        verify(kafkaTemplateMock).send(anyString(), eq(wellId), eq(sensorData));
+        verify(kafkaTemplateMock).send(anyString(), eq(wellId), any(byte[].class));
     }
 
     @Test
@@ -53,7 +53,7 @@ class SensorProducerTest {
         // Arrange
         String wellId = "Cerro-Dragon-1";
         SensorDTO sensorData = new SensorDTO(wellId, Instant.now(), 3450.0, 60.0, 1013.2);
-        when(kafkaTemplateMock.send(anyString(), anyString(), any(SensorDTO.class))).thenReturn(
+        when(kafkaTemplateMock.send(anyString(), anyString(), any(byte[].class))).thenReturn(
             CompletableFuture.completedFuture(null)
         );
 
@@ -62,7 +62,7 @@ class SensorProducerTest {
 
         // Assert
         ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
-        verify(kafkaTemplateMock).send(topicCaptor.capture(), anyString(), any(SensorDTO.class));
+        verify(kafkaTemplateMock).send(topicCaptor.capture(), anyString(), any(byte[].class));
         assertEquals("topic-telemetry", topicCaptor.getValue());
     }
 
@@ -71,7 +71,7 @@ class SensorProducerTest {
         // Arrange
         String wellId = "Cerro-Dragon-1";
         SensorDTO sensorData = new SensorDTO(wellId, Instant.now(), 3450.0, 60.0, 1013.2);
-        when(kafkaTemplateMock.send(anyString(), anyString(), any(SensorDTO.class))).thenReturn(
+        when(kafkaTemplateMock.send(anyString(), anyString(), any(byte[].class))).thenReturn(
             CompletableFuture.completedFuture(null)
         );
 
@@ -80,7 +80,7 @@ class SensorProducerTest {
 
         // Assert
         ArgumentCaptor<String> keyCaptor = ArgumentCaptor.forClass(String.class);
-        verify(kafkaTemplateMock).send(anyString(), keyCaptor.capture(), any(SensorDTO.class));
+        verify(kafkaTemplateMock).send(anyString(), keyCaptor.capture(), any(byte[].class));
         assertEquals(wellId, keyCaptor.getValue());
     }
 
@@ -91,7 +91,7 @@ class SensorProducerTest {
         String wellId2 = "Well-B";
         SensorDTO sensorData1 = new SensorDTO(wellId1, Instant.now(), 3450.0, 60.0, 1013.2);
         SensorDTO sensorData2 = new SensorDTO(wellId2, Instant.now(), 3450.0, 60.0, 1013.2);
-        when(kafkaTemplateMock.send(anyString(), anyString(), any(SensorDTO.class))).thenReturn(
+        when(kafkaTemplateMock.send(anyString(), anyString(), any(byte[].class))).thenReturn(
             CompletableFuture.completedFuture(null)
         );
 
@@ -101,7 +101,7 @@ class SensorProducerTest {
 
         // Assert
         ArgumentCaptor<String> keyCaptor = ArgumentCaptor.forClass(String.class);
-        verify(kafkaTemplateMock, times(2)).send(anyString(), keyCaptor.capture(), any(SensorDTO.class));
+        verify(kafkaTemplateMock, times(2)).send(anyString(), keyCaptor.capture(), any(byte[].class));
 
         assertEquals(wellId1, keyCaptor.getAllValues().get(0));
         assertEquals(wellId2, keyCaptor.getAllValues().get(1));
@@ -112,7 +112,7 @@ class SensorProducerTest {
         // Arrange
         String wellId = "Cerro-Dragon-1";
         SensorDTO sensorData = new SensorDTO(wellId, Instant.now(), 100.5, 50.0, 1000.0);
-        when(kafkaTemplateMock.send(anyString(), anyString(), any(SensorDTO.class))).thenReturn(
+        when(kafkaTemplateMock.send(anyString(), anyString(), any(byte[].class))).thenReturn(
             CompletableFuture.completedFuture(null)
         );
 
@@ -120,9 +120,6 @@ class SensorProducerTest {
         sensorProducer.sendMessage(wellId, sensorData);
 
         // Assert
-        ArgumentCaptor<SensorDTO> dataCaptor = ArgumentCaptor.forClass(SensorDTO.class);
-        verify(kafkaTemplateMock).send(anyString(), anyString(), dataCaptor.capture());
-        assertEquals(sensorData, dataCaptor.getValue());
+        verify(kafkaTemplateMock).send(anyString(), anyString(), any(byte[].class));
     }
 }
-

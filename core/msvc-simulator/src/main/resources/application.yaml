@@ -16,6 +16,7 @@ spring:
       telemetry: topic-telemetry
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        spring.json.type.mapping: "sensor-dto:com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO"
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
+      #Esto sirve para cuando se usa JsonSerializer, pero como usamos ByteArraySerializer, no es necesario
+      #properties:
+      #  spring.json.type.mapping: "sensor-dto:com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO"

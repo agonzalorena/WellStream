@@ -1,9 +1,11 @@
 package com.agonzalorena.msvc.analyzer.messaging.producer;
 
 import com.agonzalorena.msvc.analyzer.presentation.dto.AlertNotificationDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AlertProducer {
     private static final String TOPIC = "alerts";
@@ -18,11 +20,12 @@ public class AlertProducer {
         kafkaTemplate.send(TOPIC, alertNotification.wellId(), alertNotification)
                 .whenComplete((result, exception) -> {
                     if (exception != null) {
-                        System.err.println("Error sending alert notification: " + exception.getMessage());
+                        log.error("Error sending alert notification: {}", exception.getMessage());
                     } else {
-                        System.out.println("Alert notification sent to partition: " + result.getRecordMetadata().partition() + " with offset: " + result.getRecordMetadata().offset());
+                        log.info("Alert notification sent to partition: {} with offset: {}", result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
                     }
                 });
+        //TODO
         System.out.println("Sent alert notification: " + alertNotification.alertStatus());
     }
 }

@@ -27,10 +27,9 @@ public class SensorAverageCalculatorService {
 
     @Scheduled(fixedDelay = 30000) // Ejecuta cada 30 segundos
     public void processIncomingTelemetry() {
-        log.info("Starting telemetry processing at {}", Instant.now());
         Map<String, List<SensorDTO>> dataToProcess = telemetryBufferManager.flush();
         if(dataToProcess.isEmpty()){
-            System.out.println("No telemetry data to process at " + Instant.now());
+            log.info("No telemetry data to process at {}", Instant.now());
             return;
         }
         Instant processingTime = Instant.now();
@@ -45,7 +44,7 @@ public class SensorAverageCalculatorService {
                 sumFlow += dto.flowRateBpd();
             }
             int count = sensorDataList.size();
-            
+
             double averageTemp = (sumTemp / count);
             double averagePres = sumPres / count;
             double averageFlow = sumFlow / count;
@@ -60,8 +59,10 @@ public class SensorAverageCalculatorService {
 
             try {
                 sensorAverageRepository.save(average);
+                log.info("Saved average for wellId: {}, avgTemp: {}, avgPres: {}, avgFlow: {}, count: {}",
+                        wellId, averageTemp, averagePres, averageFlow, count);
             }catch (Exception e){
-                log.error("Error saving average for wellId: {}, error: {}", wellId, e.getMessage());
+                log.error("Error saving average for wellId: {}, error: {}. Lost data", wellId, e.getMessage());
             }
         });
 

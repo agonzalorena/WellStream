@@ -7,11 +7,13 @@ import com.agonzalorena.msvc.analyzer.common.enums.MetricType;
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import com.agonzalorena.msvc.analyzer.persistence.repository.WellAlertRepository;
 import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 
+@Slf4j
 @Service
 public class AlertAnalyzerService {
     private final AlertLimitsConfig limits;
@@ -86,13 +88,19 @@ public class AlertAnalyzerService {
     private void resolveAlert(String wellId, MetricType metricType, Instant resolvedTime) {
         int rowsUpdate = wellAlertRepository.resolveAlert(wellId, metricType, resolvedTime);
         if (rowsUpdate == 0) {
-            throw new RuntimeException("Failed to resolve alert for well: " + wellId + " and metric: " + metricType);
+            //otro hilo procesó la alerta antes, la cache no se actualizó aún, o hubo un error. Para evitar inconsistencias, no notificamos ni actualizamos cache.
+            log.info("Race condition controlled: Alert for wellId {} and metric {} was already resolved by another thread or not found. Skipping resolution.", wellId, metricType);
+            return;
         }
 
         WellAlert alert = cacheManager.get(wellId, metricType.name());
-        alert.setResolved(true);
-        alert.setResolvedTime(resolvedTime);
-        cacheManager.remove(wellId, metricType.name());
-        alertNotificationService.notifyResolvedAlert(alert);
+        if(alert!=null) {
+            alert.setResolved(true);
+            alert.setResolvedTime(resolvedTime);
+            cacheManager.remove(wellId, metricType.name());
+            alertNotificationService.notifyResolvedAlert(alert);
+        } else {
+            log.warn("Alert for wellId {} and metric {} was resolved in DB but not found in cache. This might indicate a cache inconsistency.", wellId, metricType);
+        }
     }
 }

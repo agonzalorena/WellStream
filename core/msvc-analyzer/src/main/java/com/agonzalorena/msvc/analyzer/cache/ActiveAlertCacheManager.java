@@ -2,15 +2,17 @@ package com.agonzalorena.msvc.analyzer.cache;
 
 import com.agonzalorena.msvc.analyzer.persistence.entity.WellAlert;
 import com.agonzalorena.msvc.analyzer.persistence.repository.WellAlertRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Component
 public class ActiveAlertCacheManager {
     private final WellAlertRepository wellAlertRepository;
-    //wellId-metric("pozo1-Temperature) --> LimitType(MAX o MIN)
+    //wellId-metric("pozo1-Temperature) --> WellAlert
     private final Map<String, WellAlert> activeAlertsCache = new ConcurrentHashMap<>();
 
     public ActiveAlertCacheManager(WellAlertRepository wellAlertRepository) {
@@ -20,8 +22,7 @@ public class ActiveAlertCacheManager {
 
     private void loadUnresolvedAlerts() {
         wellAlertRepository.findByResolvedFalse().forEach(this::save);
-
-        System.out.println("Loaded unresolved alerts into cache: " + activeAlertsCache);
+        log.info("Loaded unresolved alerts into cache: {}", activeAlertsCache);
     }
 
     public void save(WellAlert alert){
