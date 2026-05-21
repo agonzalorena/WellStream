@@ -8,7 +8,7 @@ spring:
     bootstrap-servers: localhost:9092
     consumer:
       group-id: telemetry-analyzer-group
-      #Empieza a leer desde el último mensaje disponible en el topic
+      #Empieza a leer desde el último mensaje disponible en el topic si el group-id es nuevo. Si el group-id ya ha consumido mensajes antes, continuará desde donde lo dejó.
       auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer

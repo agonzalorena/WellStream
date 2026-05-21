@@ -23,6 +23,7 @@ public class RealTimeAlertConsumer implements ConsumerSeekAware {
     solo procese los mensajes nuevos que lleguen a partir de su inicio.
     Al implementar onPartitionsAssigned y llamar a seekToEnd, garantizamos que el consumidor comience a leer
     desde el final de la partición, es decir, solo los mensajes que se publiquen después de que el consumidor haya comenzado a escuchar.
+    .yaml activar auto-offset-reset: latest
     */
     @Override
     public void onPartitionsAssigned(Map<TopicPartition, Long> assignments, ConsumerSeekCallback callback) {
