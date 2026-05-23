@@ -12,8 +12,6 @@ spring:
        add-mappings: false # Desactiva el manejo automatico de recursos estaticos
   kafka:
     bootstrap-servers: localhost:9092
-    topics:
-      telemetry: topic-telemetry
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer

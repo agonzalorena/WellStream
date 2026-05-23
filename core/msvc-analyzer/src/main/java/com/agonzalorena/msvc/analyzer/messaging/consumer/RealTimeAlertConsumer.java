@@ -11,6 +11,8 @@ import java.util.Map;
 
 @Component
 public class RealTimeAlertConsumer implements ConsumerSeekAware {
+    private static final String TOPIC = "topic-telemetry";
+
     private final AlertAnalyzerService alertAnalyzerService;
     private final SensorEventParser sensorEventParser;
 
@@ -30,7 +32,7 @@ public class RealTimeAlertConsumer implements ConsumerSeekAware {
         callback.seekToEnd(assignments.keySet());
     }
 
-    @KafkaListener(topics = "topic-telemetry", groupId = "real-time-alert-group")
+    @KafkaListener(topics = TOPIC, groupId = "real-time-alert-group")
     public void consume(byte[] payload) {
         SensorDTO dto = sensorEventParser.parse(payload);
         if(dto != null) {

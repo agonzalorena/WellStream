@@ -25,6 +25,7 @@ public class AlertProducer {
                 .setSeconds(alertNotification.timestamp().getEpochSecond())
                 .setNanos(alertNotification.timestamp().getNano())
                 .build();
+
         AlertEvent alertEvent = AlertEvent.newBuilder()
                 .setWellId(alertNotification.wellId())
                 .setMetricType(AlertProto.MetricType.valueOf(alertNotification.metricType().name()))

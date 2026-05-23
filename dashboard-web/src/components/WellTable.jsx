@@ -20,10 +20,10 @@ export const WellTable = ({ wells }) => {
               ID Pozo
             </th>
             <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
-              Temperatura (°C)
+              Presión (PSI)
             </th>
             <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
-              Presión (PSI)
+              Temperatura (°C)
             </th>
             <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 dark:text-gray-300">
               Flujo (bbl/d)

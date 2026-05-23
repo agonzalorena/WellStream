@@ -9,8 +9,8 @@ import com.agonzalorena.msvc.protobuf.SensorProto.SensorEvent;
 
 @Component
 public class SensorProducer {
-    @Value("${spring.kafka.topics.telemetry}")
-    private String telemetryTopic;
+    private final static String TOPIC = "topic-telemetry";
+
     private KafkaTemplate<String, byte[]> kafkaTemplate;
 
     public SensorProducer(KafkaTemplate<String, byte[]> kafkaTemplate) {
@@ -33,7 +33,7 @@ public class SensorProducer {
                 .build();
 
 
-        kafkaTemplate.send(telemetryTopic, wellId, protoSensor.toByteArray())
+        kafkaTemplate.send(TOPIC, wellId, protoSensor.toByteArray())
                      .whenComplete((result, exception) -> {
                          if(exception != null){
                              System.err.println("Error sending message: " + exception.getMessage());

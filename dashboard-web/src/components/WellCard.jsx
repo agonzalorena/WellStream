@@ -19,17 +19,6 @@ export const WellCard = ({ well }) => {
         <div className="flex-1">
           {/* Metrics Grid */}
           <div className="grid grid-cols-3 gap-2 mb-4">
-            {/* Temperatura */}
-            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-2.5 flex flex-col justify-between h-24">
-              <p className="text-xs text-gray-600 dark:text-gray-400 font-semibold leading-tight">
-                TEMP
-              </p>
-              <p className="text-xl font-bold text-red-600 dark:text-red-400 break-words">
-                {formatNumber(currentMetrics.temperatureC)}
-              </p>
-              <p className="text-xs text-red-600 dark:text-red-400">°C</p>
-            </div>
-
             {/* Presión */}
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-2.5 flex flex-col justify-between h-24">
               <p className="text-xs text-gray-600 dark:text-gray-400 font-semibold leading-tight">
@@ -39,6 +28,17 @@ export const WellCard = ({ well }) => {
                 {formatNumber(currentMetrics.pressurePsi)}
               </p>
               <p className="text-xs text-blue-600 dark:text-blue-400">PSI</p>
+            </div>
+
+            {/* Temperatura */}
+            <div className="bg-red-50 dark:bg-red-900/20 rounded-lg p-2.5 flex flex-col justify-between h-24">
+              <p className="text-xs text-gray-600 dark:text-gray-400 font-semibold leading-tight">
+                TEMP
+              </p>
+              <p className="text-xl font-bold text-red-600 dark:text-red-400 break-words">
+                {formatNumber(currentMetrics.temperatureC)}
+              </p>
+              <p className="text-xs text-red-600 dark:text-red-400">°C</p>
             </div>
 
             {/* Flow Rate */}

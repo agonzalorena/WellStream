@@ -17,12 +17,14 @@ import java.time.Instant;
 @Slf4j
 @Component
 public class AlertConsumer {
+    private static final String TOPIC = "alerts";
+
     private final SseService sseService;
 
     public AlertConsumer(SseService sseService) {
         this.sseService = sseService;
     }
-    @KafkaListener(topics = "alerts", groupId = "notification-alerts-group")
+    @KafkaListener(topics = TOPIC, groupId = "notification-alerts-group")
     public void consume(byte[] payload) {
         try {
             AlertProto.AlertEvent alertEvent = AlertProto.AlertEvent.parseFrom(payload);

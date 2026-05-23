@@ -42,20 +42,20 @@ public class SensorAverageCalculatorService {
             double sumPres=0.0;
             double sumFlow=0.0;
             for (SensorDTO dto : sensorDataList) {
-                sumTemp += dto.temperatureC();
                 sumPres += dto.pressurePsi();
+                sumTemp += dto.temperatureC();
                 sumFlow += dto.flowRateBpd();
             }
             int count = sensorDataList.size();
 
-            double averageTemp = (sumTemp / count);
             double averagePres = sumPres / count;
+            double averageTemp = (sumTemp / count);
             double averageFlow = sumFlow / count;
 
             SensorAverage average = new SensorAverage();
             average.setWellId(wellId);
-            average.setAvgTemperatureC(round(averageTemp));
             average.setAvgPressurePsi(round(averagePres));
+            average.setAvgTemperatureC(round(averageTemp));
             average.setAvgFlowRateBpd(round(averageFlow));
             average.setStartWindowTime(sensorDataList.get(0).timestamp());
             average.setEndWindowTime(sensorDataList.get(sensorDataList.size() - 1).timestamp());

@@ -1,5 +1,6 @@
 package com.agonzalorena.msvc.simulator.presentation.controller;
 
+import com.agonzalorena.msvc.simulator.common.enums.MultiplierType;
 import com.agonzalorena.msvc.simulator.presentation.dto.response.SuccessResponse;
 import com.agonzalorena.msvc.simulator.service.SensorService;
 import org.springframework.http.ResponseEntity;
@@ -15,30 +16,16 @@ public class SensorController {
         this.sensorService = sensorService;
     }
 
-    @GetMapping("/multipliers")
-    public ResponseEntity<SuccessResponse> getMultipliers() {
-        return ResponseEntity.status(200).body(new SuccessResponse(200, sensorService.getMultipliers()));
+    @GetMapping("")
+    public ResponseEntity<SuccessResponse> getAll() {
+        return ResponseEntity.status(200).body(new SuccessResponse(200, sensorService.getWells()));
     }
 
-    @PutMapping("/multipliers/pressure")
-    public ResponseEntity<SuccessResponse> setPressureMultiplier(@RequestParam double multiplier) {
-        sensorService.setPressureMultiplier(multiplier);
+    @PutMapping("/multipliers/{type}/{wellId}")
+    public ResponseEntity<SuccessResponse> setMultiplier(@PathVariable String wellId, @PathVariable MultiplierType type, @RequestParam double multiplier) {
+        sensorService.setMultiplier(wellId, type, multiplier);
         return ResponseEntity.ok()
-                .body(new SuccessResponse(200, "Multiplicador de presion establecido en "+ multiplier));
-    }
-
-    @PutMapping("/multipliers/temperature")
-    public ResponseEntity<SuccessResponse> setTemperatureMultiplier(@RequestParam double multiplier) {
-        sensorService.setTemperatureMultiplier(multiplier);
-        return ResponseEntity.ok()
-                .body(new SuccessResponse(200, "Multiplicador de temperatura establecido en "+ multiplier));
-    }
-
-    @PutMapping("/multipliers/flow")
-    public ResponseEntity<SuccessResponse> setFlowMultiplier(@RequestParam double multiplier) {
-        sensorService.setFlowMultiplier(multiplier);
-        return ResponseEntity.ok()
-                .body(new SuccessResponse(200, "Multiplicador de flujo establecido en "+ multiplier));
+                .body(new SuccessResponse(200, "Multiplicador de "+ type.name() + " establecido en "+ multiplier));
     }
 
     @PostMapping("/multipliers/reset")

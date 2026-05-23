@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TelemetryConsumer {
+    private static final String TOPIC = "topic-telemetry";
+
     private final TelemetryBufferManager telemetryBufferManager;
     private final SensorEventParser sensorEventParser;
 
@@ -17,7 +19,7 @@ public class TelemetryConsumer {
         this.sensorEventParser = sensorEventParser;
     }
 
-    @KafkaListener(topics = "topic-telemetry", groupId = "telemetry-analyzer_group")
+    @KafkaListener(topics = TOPIC, groupId = "telemetry-analyzer-group")
     public void consume(byte[] payload) {
         SensorDTO dto = sensorEventParser.parse(payload);
         if(dto != null) {

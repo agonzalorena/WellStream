@@ -14,13 +14,15 @@ import java.time.Instant;
 @Slf4j
 @Component
 public class SensorConsumer{
+    private static final String TOPIC = "topic-telemetry";
+
     private final SseService sseService;
 
     public SensorConsumer(SseService sseService) {
         this.sseService = sseService;
     }
 
-    @KafkaListener(topics = "topic-telemetry", groupId = "notification-telemetry-group")
+    @KafkaListener(topics = TOPIC, groupId = "notification-telemetry-group")
     public void consume(byte[] payload) {
         try {
             SensorEvent sensorData = SensorEvent.parseFrom(payload);
