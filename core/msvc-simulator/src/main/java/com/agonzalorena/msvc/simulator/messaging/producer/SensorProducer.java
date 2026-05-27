@@ -2,11 +2,13 @@ package com.agonzalorena.msvc.simulator.messaging.producer;
 
 import com.agonzalorena.msvc.simulator.presentation.dto.SensorDTO;
 import com.google.protobuf.Timestamp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 import com.agonzalorena.msvc.protobuf.SensorProto.SensorEvent;
 
+@Slf4j(topic = "SensorProducer")
 @Component
 public class SensorProducer {
     private final static String TOPIC = "topic-telemetry";
@@ -36,10 +38,11 @@ public class SensorProducer {
         kafkaTemplate.send(TOPIC, wellId, protoSensor.toByteArray())
                      .whenComplete((result, exception) -> {
                          if(exception != null){
-                             System.err.println("Error sending message: " + exception.getMessage());
+                             log.error("Error sending message: {}", exception.getMessage());
                          } else {
-                             System.out.println("Message sent to partition: " + result.getRecordMetadata().partition() + " with offset: " + result.getRecordMetadata().offset());
+                             log.info("Message sent to partition: {} with offset: {}", result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
                          }
                      });
+        log.info("[{}] Enviando datos: {}", wellId, sensorData);
     }
 }

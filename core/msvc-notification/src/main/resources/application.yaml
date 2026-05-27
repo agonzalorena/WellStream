@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: msvc-notification
+  output:
+    ansi:
+      enabled: always #Logs con colores para mejorar la legibilidad
 
   kafka:
     bootstrap-servers: localhost:9092

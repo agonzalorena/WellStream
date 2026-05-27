@@ -31,7 +31,7 @@ public class SensorService {
         wells.values().forEach(well -> {
             SensorDTO data = well.generateData();
             sensorProducer.sendMessage(data.wellId(), data);
-            System.out.println("[" + data.wellId() + "] Enviando datos: " + data);
+
         });
     }
 

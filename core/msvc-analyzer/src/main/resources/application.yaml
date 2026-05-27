@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: analyzer
+  output:
+    ansi:
+      enabled: always #Logs con colores para mejorar la legibilidad
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -35,9 +38,6 @@ spring:
     logging:
         level:
           org.hibernate.SQL: DEBUG
-  output:
-    ansi:
-        enabled: always #Logs de hibernate con colores
 
 # App Configuration
 app:

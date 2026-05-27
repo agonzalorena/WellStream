@@ -37,7 +37,6 @@ public class SensorConsumer{
                     sensorData.getTemperatureC(),
                     sensorData.getFlowRateBpd()
             ));
-
         } catch (InvalidProtocolBufferException e) {
             log.error("Failed to parse protobuf message: {}", e.getMessage());
         }

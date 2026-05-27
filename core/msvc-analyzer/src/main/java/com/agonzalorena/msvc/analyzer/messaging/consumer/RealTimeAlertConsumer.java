@@ -3,12 +3,14 @@ package com.agonzalorena.msvc.analyzer.messaging.consumer;
 import com.agonzalorena.msvc.analyzer.messaging.consumer.parser.SensorEventParser;
 import com.agonzalorena.msvc.analyzer.presentation.dto.SensorDTO;
 import com.agonzalorena.msvc.analyzer.service.AlertAnalyzerService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.listener.ConsumerSeekAware;
 import org.springframework.stereotype.Component;
 import java.util.Map;
 
+@Slf4j(topic = "RealTimeAlertConsumer")
 @Component
 public class RealTimeAlertConsumer implements ConsumerSeekAware {
     private static final String TOPIC = "topic-telemetry";
@@ -36,7 +38,7 @@ public class RealTimeAlertConsumer implements ConsumerSeekAware {
     public void consume(byte[] payload) {
         SensorDTO dto = sensorEventParser.parse(payload);
         if(dto != null) {
-            System.out.println("Received telemetry data for real-time alert analysis: " + dto);
+            log.info("Received telemetry data for real-time alert analysis: {}", dto);
             alertAnalyzerService.checkCriticalValues(dto);
         }
     }

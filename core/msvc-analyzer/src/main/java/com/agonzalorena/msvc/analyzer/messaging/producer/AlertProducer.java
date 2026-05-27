@@ -44,6 +44,6 @@ public class AlertProducer {
                         log.info("Alert notification sent to partition: {} with offset: {}", result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
                     }
                 });
-        System.out.println("Sent alert notification: " + alertNotification.alertStatus());
+        log.trace("Sent alert notification: {}", alertNotification);
     }
 }

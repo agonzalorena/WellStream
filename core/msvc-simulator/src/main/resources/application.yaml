@@ -3,6 +3,9 @@ server:
 spring:
   application:
     name: simulator
+  output:
+    ansi:
+      enabled: always #Logs con colores para mejorar la legibilidad
   mvc:
     servlet:
       path: /api

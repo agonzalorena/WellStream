@@ -40,6 +40,7 @@ public class AlertConsumer {
                     timestamp,
                     AlertStatus.valueOf(alertEvent.getAlertStatus().name())
             ));
+            log.warn("Received alert {}, sending notification: {}", alertEvent.getWellId(), alertEvent);
         }catch (InvalidProtocolBufferException e){
             log.error("Failed to parse protobuf message: {}", e.getMessage());
         }
